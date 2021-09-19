@@ -20,7 +20,7 @@ function inProgress(){
         method: 'GET',
         url: 'https://api.sportsdata.io/v3/nba/scores/json/AreAnyGamesInProgress',
         headers: {
-            'Ocp-Apim-Subscription-Key': process.env.OCP_NBA_KEY
+            'Ocp-Apim-Subscription-Key': process.env.OCP_KEY_NBA
         }
       };
       
@@ -74,7 +74,7 @@ function TeamsActive(){
         method: 'GET',
         url: 'https://api.sportsdata.io/v3/nba/scores/json/AreAnyGamesInProgress',
         headers: {
-            'Ocp-Apim-Subscription-Key': process.env.OCP_NBA_KEY
+            'Ocp-Apim-Subscription-Key': process.env.OCP_KEY_NBA
         }
       };
       

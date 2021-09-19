@@ -20,7 +20,7 @@ function gamesInProgress(){
         method: 'GET',
         url: 'https://api.sportsdata.io/v3/mlb/scores/json/AreAnyGamesInProgress',
         headers: {
-            'Ocp-Apim-Subscription-Key': process.env.OCP_MLB_KEY
+            'Ocp-Apim-Subscription-Key': process.env.OCP_KEY_MLB
         }
       };
       
@@ -60,7 +60,7 @@ function GamesByDate(){
         method: 'GET',
         url: `https://api.sportsdata.io/v3/mlb/scores/json/GamesByDate/${datestr}`,
         headers: {
-            'Ocp-Apim-Subscription-Key': process.env.OCP_MLB_KEY
+            'Ocp-Apim-Subscription-Key': process.env.OCP_KEY_MLB
         }
       };
       
@@ -118,7 +118,68 @@ function GamesByDate(){
 //gamesInProgress();
 
 
-function baseBallNews(){
-    let date = todaysDate()
+function BaseballNews(){
+
+
+    var options = {
+        method: 'GET',
+        url: `https://api.sportsdata.io/v3/mlb/scores/json/News`,
+        headers: {
+            'Ocp-Apim-Subscription-Key': process.env.OCP_KEY_MLB
+        }
+      };
+      
+      
+    axios.request(options).then(function (response) {
+          //console.log(response.data);
+          return response.data;
+      }).then((res) => {
+            //console.log(res)
+            const newsArticles = res;
+            const rows = [];
+
+                newsArticles.map((article) => {
+                    const cells = [];
+                    let title = {"column": "c-topEGqFVlj", "value": article.Title};
+                    let source = {"column": "c-YFvKb-N_GX", "value": article.Source};
+                    let content = {"column": "c-u9TA5rle6S", "value": article.Content};
+                    let link = {"column": "c-x3UYQ-IRBh", "value": article.Url};
+                    let updated = {"column": "c-CjWT-9YxLz", "value": article.Updated}
+                    cells.push(title,source,content,link,updated);
+                    let cellObj = {
+                        "cells": cells
+                    }
+                    rows.push(cellObj);
+                })
+
+
+           
+            const config = {
+                headers: { 
+                    Authorization: `Bearer ${process.env.BEARER}`,
+                    'Content-Type': 'application/json',
+                    'Accept': '*/*',
+                    'Accept-Encoding': 'gzip, deflate, br',
+                    'Connection': 'keep-alive'
+
+                }
+            };
+            
+            const bodyParameters = {
+                "rows": rows
+            };
+            
+            axios.post( 
+              'https://coda.io/apis/v1/docs/A6usZ9fqD5/tables/grid-DSbcvFX4SP/rows?disableParsing=true',
+              bodyParameters,
+              config     
+            ).then(console.log).catch(console.log);
+
+      })
+      
+      .catch(function (error) {
+          console.error(error);
+      });
 }
-baseBallNews()
+
+BaseballNews();

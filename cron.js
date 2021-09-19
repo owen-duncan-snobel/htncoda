@@ -13,6 +13,17 @@ const job = new CronJob({
 });
 job.start();
 
+const NewsJob = new CronJob({
+  cronTime: '00 00 */3 * * *',
+  onTick: function() {
+      CODABaseball.gamesInProgress()
+  },
+  start: false,
+  timeZone: 'America/New_York'
+});
+job.start();
+
+
 //this does nothing except tell now we're alive 
 const port = process.env.PORT || 2345;
 app.listen(port, function () {
